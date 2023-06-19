@@ -95,8 +95,8 @@ if ($result->num_rows > 0) {
         Description: <?php echo $room['description']; ?><br>
         Price per Night: <?php echo $room['price_per_night']; ?><br>
         <button class="btn btn-success" type="button" data-toggle="modal" data-target="#reservationModal" data-room-id="<?php echo $room['id']; ?>" data-room-price="<?php echo $room['price_per_night']; ?>">Reserve Room</button>
-        <a href="#"><button class="btn btn-primary" type="button">Edit</button></a>
-        <a href="#"><button class="btn btn-danger" type="button">Delete</button></a>
+        <a href="updateRoom.php?id=<?php echo $room['id']; ?>"><button class="btn btn-primary" type="button">Edit</button></a>
+        <a href="DB/delete_room.php?id=<?php echo $room['id']; ?>"><button class="btn btn-danger" type="button">Delete</button></a>
       </li>
     <?php endforeach; ?>
   </ul>
