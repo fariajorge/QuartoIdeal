@@ -55,7 +55,13 @@ if ($result->num_rows > 0) {
 <!DOCTYPE html>
 <html>
 <head>
+
+<!-- style -->
   <link href="css/style.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
+
   <title>Hotel Details</title>
 </head>
 <body>
@@ -64,7 +70,7 @@ if ($result->num_rows > 0) {
       <ul>
         <li><a href="home.php">Home</a></li>
         <li><a href="#">Search Rooms</a></li>
-        <li><a href="#">My Bookings</a></li>
+        <li><a href="bookings.php">My Bookings</a></li>
         <li><a href="#">Contact</a></li>
         <li style="float:right"><a href="DB/db_logout.php">Logout</a></li>
       </ul>
@@ -79,27 +85,93 @@ if ($result->num_rows > 0) {
   <p>Country: <?php echo $country; ?></p>
   <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" alt="Hotel Image" width="300">
   
-
   <h2>Rooms</h2>
-  <?php if (count($rooms) > 0) : ?>
-    <ul>
-      <?php foreach ($rooms as $room) : ?>
-        <li>
-            Room Number: <?php echo $room['room_number']; ?><br>
-            Room Type: <?php echo $room['room_type']; ?><br>
-            Description: <?php echo $room['description']; ?><br>
-            Price per Night: <?php echo $room['price_per_night']; ?><br>
-            <a href="rooms.php?id=<?php echo $room['id']; ?>"><button class="btn btn-success" type="button">Reservar quarto</button></a>
-            <a href="updateRoom.php?id=<?php echo $room['id']; ?>"><button class="btn btn-primary" type="button">Edit</button></a>
-            <a href="DB/delete_room.php?id=<?php echo $room['id']; ?>"><button class="btn btn-danger" type="button">Delete</button></a>
-        </li>
+<?php if (count($rooms) > 0) : ?>
+  <ul>
+    <?php foreach ($rooms as $room) : ?>
+      <li>
+        Room Number: <?php echo $room['room_number']; ?><br>
+        Room Type: <?php echo $room['room_type']; ?><br>
+        Description: <?php echo $room['description']; ?><br>
+        Price per Night: <?php echo $room['price_per_night']; ?><br>
+        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#reservationModal" data-room-id="<?php echo $room['id']; ?>" data-room-price="<?php echo $room['price_per_night']; ?>">Reserve Room</button>
+        <a href="updateRoom.php?id=<?php echo $room['id']; ?>"><button class="btn btn-primary" type="button">Edit</button></a>
+        <a href="DB/delete_room.php?id=<?php echo $room['id']; ?>"><button class="btn btn-danger" type="button">Delete</button></a>
+      </li>
+    <?php endforeach; ?>
+  </ul>
+<?php else : ?>
+  <p>No rooms found for this hotel.</p>
+<?php endif; ?>
 
-      <?php endforeach; ?>
-    </ul>
-  <?php else : ?>
-    <p>No rooms found for this hotel.</p>
-  <?php endif; ?>
 
+  <!-- Reservation Modal -->
+<div class="modal fade" id="reservationModal" tabindex="-1" role="dialog" aria-labelledby="reservationModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reservationModalLabel">Room Reservation</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="reservationForm" action="DB/book_room.php" method="post">
+          <input type="hidden" name="room_id" id="room_id">
+          <div class="form-group">
+            <label for="entryDate">Entry Date</label>
+            <input type="date" class="form-control" id="entryDate" name="entryDate" required>
+          </div>
+          <div class="form-group">
+            <label for="checkoutDate">Check-out Date</label>
+            <input type="date" class="form-control" id="checkoutDate" name="checkoutDate" required>
+          </div>
+          <div class="form-group">
+            <label for="totalCost">Total Cost</label>
+            <input type="text" class="form-control" id="totalCost" readonly>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-success" form="reservationForm">Reserve</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Handle modal show event
+  $('#reservationModal').on('show.bs.modal', function(event) {
+    var button = $(event.relatedTarget); // Button that triggered the modal
+    var roomId = button.data('room-id'); // Extract room ID from data attribute
+    var roomPrice = button.data('room-price'); // Extract room price from data attribute
+    var modal = $(this);
+
+    console.log(roomId+ "dafadafd");
+    console.log(roomPrice+"fadsf");
+
+
+
+    // Set room ID in the reservation form
+    modal.find('#room_id').val(roomId);
+
+    // Calculate and display the total cost based on the selected dates
+    modal.find('#entryDate, #checkoutDate').on('input', function() {
+      var entryDate = new Date(modal.find('#entryDate').val());
+      var checkoutDate = new Date(modal.find('#checkoutDate').val());
+
+      if (entryDate && checkoutDate && entryDate <= checkoutDate) {
+        var timeDiff = Math.abs(checkoutDate.getTime() - entryDate.getTime());
+        var numNights = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        var totalCost = numNights * roomPrice;
+        modal.find('#totalCost').val(totalCost);
+      } else {
+        modal.find('#totalCost').val('');
+      }
+    });
+  });
+</script>
 
 </body>
 </html>

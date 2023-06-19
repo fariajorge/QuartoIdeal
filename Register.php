@@ -13,7 +13,6 @@
           <ul>
           <li><a href="index.php">Home</a></li>
             <li><a href="#">Search Rooms</a></li>
-            <li><a href="#">My Bookings</a></li>
             <li><a href="#">Contact</a></li>
             <li style="float:right"><a href="Register.php">Register</a></li>
             <li style="float:right"><a href="logIn.php">Login</a></li>
