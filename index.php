@@ -11,7 +11,7 @@ $result = $conn->query($query);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/styleIndex.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
   <title>Quarto Ideal</title>
 </head>
@@ -28,6 +28,12 @@ $result = $conn->query($query);
     </header>
 
   <main>
+
+  <div class="description-box">
+      <h1>Bem vindo ao Quarto Ideal!</h1>
+      <p>Descubra o hotel perfeito para a sua próxima viagem.</p>
+  </div>
+
   <div class="card-group">
 <?php
 // Check if there are hotels to display

@@ -30,9 +30,7 @@ $result = $conn->query($query);
     <nav>
         <ul>
             <li><a href="home.php">Home</a></li>
-            <li><a href="#">Search Rooms</a></li>
             <li><a href="bookings.php">My Bookings</a></li>
-            <li><a href="#">Contact</a></li>
             <li style="float:right"><a href="DB/db_logout.php">Logout</a></li>           
         </ul>
     </nav>
@@ -40,7 +38,15 @@ $result = $conn->query($query);
 
 <h1>Welcome, <?php echo $_SESSION['username']; ?>!</h1>
 
-<a href="hotels.php"><button>Create Hotel</button></a>
+<p>Bem-vindo ao nosso sistema de reservas de hotel!</p>
+<p>Navegue pela nossa seleção de hotéis e faça a reserva da sua estadia perfeita. </p>
+<p>Oferecemos uma ampla variedade de acomodações para atender às suas necessidades.</p> 
+<p>Comece a explorar e faça a sua reserva hoje mesmo!</p>
+<?php
+if ($_SESSION['role'] == 'worker' ||$_SESSION['role'] == 'admin') {
+  echo '<a href="hotels.php"><button class="create-button">Create Hotel</button></a>';
+}
+?>
 
 <div class="card-group">
 <?php
@@ -56,10 +62,17 @@ if ($result->num_rows > 0) {
             <p class="card-text">' . $row['address'] . '</p>
             <p class="card-text">' . $row['city'] . ', ' . $row['country'] . '</p>
             <div class="d-grid gap-2">
-            <a href="rooms.php?id=' . $row['id'] . '"><button class="btn btn-success" type="button">ver quartos disponiveis</button></a>
-            <a href="updateHotel.php?id=' . $row['id'] . '"><button class="btn btn-primary" type="button">Editar</button></a>
-            <a href="DB/delete_hotel.php?id=' . $row['id'] . '"><button class="btn btn-danger" type="button">Apagar</button></a>
-            </div>
+            <a href="rooms.php?id=' . $row['id'] . '"><button class="btn btn-success" type="button">ver quartos disponiveis</button></a>';
+            
+          // Show the delete button only to users with the admin role
+          if ($_SESSION['role'] == 'worker'|| $_SESSION['role'] == 'admin') {
+            echo '<a href="updateHotel.php?id=' . $row['id'] . '"><button class="btn btn-primary" type="button">Editar</button></a>';
+          }  
+          // Show the delete button only to users with the admin role
+          if ($_SESSION['role'] == 'admin') {
+            echo '<a href="DB/delete_hotel.php?id=' . $row['id'] . '"><button class="btn btn-danger" type="button">Apagar</button></a>';
+          }         
+      echo '</div>
         </div>
       </div>';
     }

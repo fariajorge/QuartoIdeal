@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/styleLogIn.css" rel="stylesheet" />
   <title>Register</title>
 </head>
 <body>
@@ -12,8 +12,6 @@
         <nav>
           <ul>
           <li><a href="index.php">Home</a></li>
-            <li><a href="#">Search Rooms</a></li>
-            <li><a href="#">Contact</a></li>
             <li style="float:right"><a href="Register.php">Register</a></li>
             <li style="float:right"><a href="logIn.php">Login</a></li>
           </ul>
@@ -33,7 +31,7 @@
     <input type="email" id="email" name="email" required>
 
     <label for="userType">User Type:</label>
-<select id="userType" name="userType" required>
+<select id="userType" name="role" required>
   <option value="admin">Admin</option>
   <option value="client">Client</option>
   <option value="worker">Worker</option>
@@ -42,5 +40,9 @@
 
     <input type="submit" value="Register">
   </form>
+
+  <footer>
+    <p>&copy; 2023 Hotel Room Reservation System. All rights reserved.</p>
+  </footer>
 </body>
 </html>

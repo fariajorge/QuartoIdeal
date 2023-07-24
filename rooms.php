@@ -57,7 +57,7 @@ if ($result->num_rows > 0) {
 <head>
 
 <!-- style -->
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="css/styleRoom.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
@@ -69,40 +69,66 @@ if ($result->num_rows > 0) {
     <nav>
       <ul>
         <li><a href="home.php">Home</a></li>
-        <li><a href="#">Search Rooms</a></li>
         <li><a href="bookings.php">My Bookings</a></li>
-        <li><a href="#">Contact</a></li>
         <li style="float:right"><a href="DB/db_logout.php">Logout</a></li>
       </ul>
     </nav>
   </header>
-  <a href="add_room.php?id=<?php echo $hotelId; ?>"><button>Add Room</button></a>
-  <h1>Hotel Details</h1>
 
-  <h2><?php echo $hotelName; ?></h2>
-  <p>Address: <?php echo $address; ?></p>
-  <p>City: <?php echo $city; ?></p>
-  <p>Country: <?php echo $country; ?></p>
-  <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" alt="Hotel Image" width="300">
+  <?php
+    if ($_SESSION['role'] == 'worker' ||$_SESSION['role'] == 'admin') {
+      echo "<a href='add_room.php?id=$hotelId'><button>Add Room</button></a>";
+    }
+  ?>
+ <div class="hotel-details">
+    <div class="hotel-image">
+      <img src="data:image/jpeg;base64,<?php echo $imageData; ?>" alt="Hotel Image">
+    </div>
+    <div class="hotel-info">
+      <h1><?php echo $hotelName; ?></h1>
+      <p>Address: <?php echo $address; ?></p>
+      <p>City: <?php echo $city; ?></p>
+      <p>Country: <?php echo $country; ?></p>
+    </div>
+  </div>
+
+
   
-  <h2>Rooms</h2>
-<?php if (count($rooms) > 0) : ?>
-  <ul>
-    <?php foreach ($rooms as $room) : ?>
-      <li>
-        Room Number: <?php echo $room['room_number']; ?><br>
-        Room Type: <?php echo $room['room_type']; ?><br>
-        Description: <?php echo $room['description']; ?><br>
-        Price per Night: <?php echo $room['price_per_night']; ?><br>
-        <button class="btn btn-success" type="button" data-toggle="modal" data-target="#reservationModal" data-room-id="<?php echo $room['id']; ?>" data-room-price="<?php echo $room['price_per_night']; ?>">Reserve Room</button>
-        <a href="updateRoom.php?id=<?php echo $room['id']; ?>"><button class="btn btn-primary" type="button">Edit</button></a>
-        <a href="DB/delete_room.php?id=<?php echo $room['id']; ?>"><button class="btn btn-danger" type="button">Delete</button></a>
-      </li>
-    <?php endforeach; ?>
-  </ul>
-<?php else : ?>
-  <p>No rooms found for this hotel.</p>
-<?php endif; ?>
+  
+<h2>Rooms</h2>
+  <?php
+    // Check if there are rooms to display
+    if (!empty($rooms)) {
+      foreach ($rooms as $room) {
+        echo '
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Room Number: ' . $room['room_number'] . '</h5>
+            <p class="card-text">Room Type: ' . $room['room_type'] . '</p>
+            <p class="card-text">Description: ' . $room['description'] . '</p>
+            <p class="card-text">Price per Night: ' . $room['price_per_night'] . '</p>';
+
+        // Display the "Reserve Room" button for all users
+        echo '<button class="btn btn-success" type="button" data-toggle="modal" data-target="#reservationModal" data-room-id="' . $room['id'] . '" data-room-price="' . $room['price_per_night'] . '">Reserve Room</button>';
+
+        // Show the "Edit" and "Delete" buttons for users with the worker or admin role
+        if ($_SESSION['role'] == 'worker' || $_SESSION['role'] == 'admin') {
+          echo '<a href="updateRoom.php?id=' . $room['id'] . '"><button class="btn btn-primary" type="button">Edit</button></a>';
+        }
+        if ($_SESSION['role'] == 'admin') {
+          echo '<a href="DB/delete_room.php?id=' . $room['id'] . '"><button class="btn btn-danger" type="button">Delete</button></a>';
+        }
+
+        echo '
+          </div>
+        </div>';
+      }
+    } else {
+      echo "<p>No rooms found for this hotel.</p>";
+    }
+    ?>
+
+
 
 
   <!-- Reservation Modal -->

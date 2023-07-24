@@ -30,11 +30,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
   if ($stmt->execute()) {
     // Reservation successful
-    header("Location: reservation_success.php");
+    header("Location: ../bookings.php");
     exit();
   } else {
     // Reservation failed
-    header("Location: reservation_error.php");
+    header("Location: ../home.php");
     exit();
   }
 }

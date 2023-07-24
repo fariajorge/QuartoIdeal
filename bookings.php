@@ -13,7 +13,7 @@ if (!isset($_SESSION['username'])) {
 <html>
 <head>
  <!-- style -->
- <link href="css/style.css" rel="stylesheet" />
+ <link href="css/styleBooking.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
@@ -26,9 +26,7 @@ if (!isset($_SESSION['username'])) {
     <nav>
       <ul>
         <li><a href="home.php">Home</a></li>
-        <li><a href="#">Search Rooms</a></li>
         <li><a href="bookings.php">My Bookings</a></li>
-        <li><a href="#">Contact</a></li>
         <li style="float:right"><a href="DB/db_logout.php">Logout</a></li>
       </ul>
     </nav>
@@ -36,7 +34,8 @@ if (!isset($_SESSION['username'])) {
 
   <h1>My Bookings</h1>
 
-  <table class="booking-table">
+  <div class="booking-container">
+    <table class="booking-table">
     <thead>
       <tr>
         <th>Booking ID</th>
@@ -70,42 +69,46 @@ if (!isset($_SESSION['username'])) {
           echo "<td>$roomNumber</td>";
           echo "<td>$checkInDate</td>";
           echo "<td>$checkOutDate</td>";
-          echo "<td>";
-          echo "<a href='#' data-toggle='modal' data-target='#editModal$bookingId' class='btn btn-primary'><i class='bi bi-pencil-fill'></i></a>";
-          echo "<a href='DB/delete_booking.php?id=$bookingId' class='btn btn-danger'><i class='bi bi-trash-fill'></i></a>";
+          echo "<td>";          
+          if ($_SESSION['role'] == 'worker' || $_SESSION['role'] == 'admin') {
+            echo "<a href='#' data-toggle='modal' data-target='#editModal$bookingId' class='btn btn-primary'><i class='bi bi-pencil-fill'></i></a>";
+          }          
+          if ($_SESSION['role'] == 'admin') {
+            echo "<a href='DB/delete_booking.php?id=$bookingId' class='btn btn-danger'><i class='bi bi-trash-fill'></i></a>";
+          }
           echo "</td>";
           echo "</tr>";
-
+          
           // Edit Modal for each booking
-echo "<div class='modal fade' id='editModal$bookingId' tabindex='-1' role='dialog' aria-labelledby='editModalLabel$bookingId' aria-hidden='true'>";
-echo "<div class='modal-dialog' role='document'>";
-echo "<div class='modal-content'>";
-echo "<div class='modal-header'>";
-echo "<h5 class='modal-title' id='editModalLabel$bookingId'>Edit Booking</h5>";
-echo "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>";
-echo "<span aria-hidden='true'>&times;</span>";
-echo "</button>";
-echo "</div>";
-echo "<div class='modal-body'>";
-echo "<form action='DB/update_booking.php' method='POST'>";
-echo "<input type='hidden' name='booking_id' value='$bookingId'>";
-echo "<div class='form-group'>";
-echo "<label for='checkInDate'>Check-in Date:</label>";
-echo "<input type='date' class='form-control' id='checkInDate' name='check_in_date' value='$checkInDate'>";
-echo "</div>";
-echo "<div class='form-group'>";
-echo "<label for='checkOutDate'>Check-out Date:</label>";
-echo "<input type='date' class='form-control' id='checkOutDate' name='check_out_date' value='$checkOutDate'>";
-echo "</div>";
-echo "<button type='submit' class='btn btn-primary'>Save Changes</button>";
-echo "</form>";
-echo "</div>";
-echo "<div class='modal-footer'>";
-echo "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>";
-echo "</div>";
-echo "</div>";
-echo "</div>";
-echo "</div>";
+          echo "<div class='modal fade' id='editModal$bookingId' tabindex='-1' role='dialog' aria-labelledby='editModalLabel$bookingId' aria-hidden='true'>";
+          echo "<div class='modal-dialog' role='document'>";
+          echo "<div class='modal-content'>";
+          echo "<div class='modal-header'>";
+          echo "<h5 class='modal-title' id='editModalLabel$bookingId'>Edit Booking</h5>";
+          echo "<button type='button' class='close' data-dismiss='modal' aria-label='Close'>";
+          echo "<span aria-hidden='true'>&times;</span>";
+          echo "</button>";
+          echo "</div>";
+          echo "<div class='modal-body'>";
+          echo "<form action='DB/update_booking.php' method='POST'>";
+          echo "<input type='hidden' name='booking_id' value='$bookingId'>";
+          echo "<div class='form-group'>";
+          echo "<label for='checkInDate'>Check-in Date:</label>";
+          echo "<input type='date' class='form-control' id='checkInDate' name='check_in_date' value='$checkInDate'>";
+          echo "</div>";
+          echo "<div class='form-group'>";
+          echo "<label for='checkOutDate'>Check-out Date:</label>";
+          echo "<input type='date' class='form-control' id='checkOutDate' name='check_out_date' value='$checkOutDate'>";
+          echo "</div>";
+          echo "<button type='submit' class='btn btn-primary'>Save Changes</button>";
+          echo "</form>";
+          echo "</div>";
+          echo "<div class='modal-footer'>";
+          echo "<button type='button' class='btn btn-secondary' data-dismiss='modal'>Close</button>";
+          echo "</div>";
+          echo "</div>";
+          echo "</div>";
+          echo "</div>";
 
         }
       } else {
@@ -114,7 +117,6 @@ echo "</div>";
       ?>
     </tbody>
   </table>
-
-  <script src="https://kit.fontawesome.com/your-font-awesome-kit.js" crossorigin="anonymous"></script>
+  </div>
 </body>
 </html>

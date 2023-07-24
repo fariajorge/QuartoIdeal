@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
-
+ 
     if ($result->num_rows == 1) {
       $row = $result->fetch_assoc();
 
@@ -28,17 +28,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         session_start();
         $_SESSION["user_id"] = $row["id"];
         $_SESSION["username"] = $row["username"];
-
+        $_SESSION["role"] = $row["role"]; // Assuming 'role' is a column in the 'users' table
+        var_dump("akshdaksf");
         // Redirect the user to the desired page after successful login
         header("Location: ../home.php");
         exit();
       } else {
         // Display an error message if the password is incorrect
         $error = "Invalid password.";
+        var_dump($error);
       }
     } else {
       // Display an error message if the username is not found
       $error = "Invalid username.";
+      var_dump($error);
     }
   }
 }

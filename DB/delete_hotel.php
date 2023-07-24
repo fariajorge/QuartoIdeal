@@ -1,24 +1,22 @@
 <?php
-// Include the file with the database connection
-require_once "db_connection.php";
+require_once('db_connection.php');
 
-// Check if the hotel ID is provided in the URL
-if (isset($_GET['id'])) {
-  $hotelId = $_GET['id'];
+// Get the hotel ID from the request
+$hotelId = $_GET['id'];
 
-  // Delete the hotel from the database
-  $sql = "DELETE FROM hotels WHERE id = $hotelId";
+// Delete associated bookings
+$deleteBookingsQuery = "DELETE FROM bookings WHERE room_id IN (SELECT id FROM rooms WHERE hotel_id = $hotelId)";
+$conn->query($deleteBookingsQuery);
 
-  if ($conn->query($sql) === TRUE) {
-    echo "Hotel deleted successfully.";
-  } else {
-    echo "Error deleting hotel: " . $conn->error;
-  }
-} else {
-  echo "Hotel ID not provided.";
-}
+// Delete associated rooms
+$deleteRoomsQuery = "DELETE FROM rooms WHERE hotel_id = $hotelId";
+$conn->query($deleteRoomsQuery);
 
-// Redirect back to the home page Z
+// Delete the hotel
+$deleteHotelQuery = "DELETE FROM hotels WHERE id = $hotelId";
+$conn->query($deleteHotelQuery);
+
+// Redirect back to the hotels page or any other appropriate location
 header("Location: ../home.php");
 exit();
 ?>
