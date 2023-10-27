@@ -11,7 +11,7 @@
     <header>
         <nav>
           <ul>
-          <li><a href="index.php">Home</a></li>
+          <li><a href="index.php">Home helloooooo</a></li>
             <li style="float:right"><a href="Register.php">Register</a></li>
             <li style="float:right"><a href="logIn.php">Login</a></li>
           </ul>
