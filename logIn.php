@@ -1,3 +1,7 @@
+<!-- 
+  Este arquivo HTML exibe a página de login para o sistema de reservas de quartos de hotel.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,7 +22,9 @@
         </nav>
     </header>
 
-  <h1 style="color:white">Login</h1>
+  <p></p>
+  
+  <h1>Login</h1>
 
   <form action="DB/db_login.php" method="POST">
     <label for="username">Username:</label>
@@ -31,7 +37,7 @@
   </form>
 
   <footer>
-    <p>&copy; 2023 Hotel Room Reservation System. All rights reserved.</p>
+    <p>&copy; 2024 Hotel Room Reservation System. All rights reserved.</p>
   </footer>
 </body>
 </html>

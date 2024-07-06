@@ -1,34 +1,41 @@
+<!-- 
+  Este arquivo PHP permite atualizar os detalhes de um quarto de hotel específico, carregando os dados do quarto do 
+  banco de dados com base no ID fornecido na URL.
+--> 
+
 <?php
 session_start();
 
-// Check if the user is logged in
+// Verifica se o utilizador está logado
 if (!isset($_SESSION['username'])) {
-  // Redirect the user to the login page or any other appropriate location
-  header("Location: login.php");
-  exit();
+    // Redireciona o utilizador para a página de login ou outra localização apropriada
+    header("Location: login.php");
+    exit();
 }
 
 require_once("DB/db_connection.php");
 
-// Check if the room ID is provided in the URL
+// Verifica se o ID do quarto foi fornecido na URL
 if (isset($_GET['id'])) {
     $roomId = $_GET['id'];
-  
-    // Retrieve the room data from the database
+
+    // Recupera os dados do quarto do banco de dados
     $sql = "SELECT * FROM rooms WHERE id = $roomId";
     $result = $conn->query($sql);
-  
+
     if ($result->num_rows > 0) {
-      $row = $result->fetch_assoc();
-      $roomNumber = $row['room_number'];
-      $roomType = $row['room_type'];
-      $description = $row['description'];
-      $pricePerNight = $row['price_per_night'];
-    } else {
-      echo "Room not found.";
-      exit();
+        $row = $result->fetch_assoc();
+        $roomNumber = $row['room_number'];
+        $roomType = $row['room_type'];
+        $description = $row['description'];
+        $pricePerNight = $row['price_per_night'];
     }
-} else {
+    else {
+        echo "Room not found.";
+        exit();
+    }
+}
+else {
     echo "Room ID not provided.";
     exit();
 }
@@ -37,21 +44,47 @@ if (isset($_GET['id'])) {
 <!DOCTYPE html>
 <html>
 <head>
-    <link href="css/style.css" rel="stylesheet" />
+    <<link href="css/styleAddRoom.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
     <title>Hotels - Update Room</title>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="home.php">Home</a></li>
-                <li><a href="#">Search Rooms</a></li>
-                <li><a href="bookings.php">My Bookings</a></li>
-                <li><a href="#">Contact</a></li>
-                <li style="float:right"><a href="DB/db_logout.php">Logout</a></li>
-            </ul>
-        </nav>
-    </header>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="home.php">Home</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="bookings.php">My Bookings</a>
+          </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+          <?php if ($_SESSION['role'] == 'admin') { ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin Menu
+            </a>
+            <div class="dropdown-menu" aria-labelledby="adminMenu">
+              <a class="dropdown-item" href="adminView.php">All Bookings</a>
+              <a class="dropdown-item" href="allUsers.php">Users</a>
+            </div>
+          </li>
+          <?php
+}?>
+          <li class="nav-item">
+            <a class="nav-link" href="DB/db_logout.php">Logout</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </header>
+
 
     <h1>Update Room</h1>
 

@@ -1,16 +1,21 @@
+<!--
+  Este arquivo PHP exibe uma lista de hotéis e permite que utilizadores com funções específicas 
+  editem ou excluam hotéis. 
+--> 
+
 <?php
 session_start();
 
-// Check if the user is logged in
+// Verifica se o utilizador está logado
 if (!isset($_SESSION['username'])) {
-  // Redirect the user to the login page or any other appropriate location
+  // Redireciona o utilizador para a página de login ou outra localização apropriada
   header("Location: login.php");
   exit();
 }
 
 require_once("DB/db_connection.php");
 
-// Retrieve hotels from the database
+// Recupera os hotéis do banco de dados
 $query = "SELECT * FROM hotels";
 $result = $conn->query($query);
 ?>
@@ -19,22 +24,47 @@ $result = $conn->query($query);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link href="css/style.css" rel="stylesheet" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    <link href="css/styleHome.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
     <title></title>
 </head>
 
 <body>
 
 <header>
-    <nav>
-        <ul>
-            <li><a href="home.php">Home</a></li>
-            <li><a href="bookings.php">My Bookings</a></li>
-            <li style="float:right"><a href="DB/db_logout.php">Logout</a></li>           
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <a class="navbar-brand" href="home.php">Home</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="bookings.php">My Bookings</a>
+          </li>
         </ul>
+        <ul class="navbar-nav ml-auto">
+          <?php if ($_SESSION['role'] == 'admin') { ?>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="adminMenu" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Admin Menu
+            </a>
+            <div class="dropdown-menu" aria-labelledby="adminMenu">
+              <a class="dropdown-item" href="adminView.php">All Bookings</a>
+              <a class="dropdown-item" href="allUsers.php">Users</a>
+            </div>
+          </li>
+          <?php } ?>
+          <li class="nav-item">
+            <a class="nav-link" href="DB/db_logout.php">Logout</a>
+          </li>
+        </ul>
+      </div>
     </nav>
-</header>
+  </header>
 
 <h1>Welcome, <?php echo $_SESSION['username']; ?>!</h1>
 
@@ -42,19 +72,24 @@ $result = $conn->query($query);
 <p>Navegue pela nossa seleção de hotéis e faça a reserva da sua estadia perfeita. </p>
 <p>Oferecemos uma ampla variedade de acomodações para atender às suas necessidades.</p> 
 <p>Comece a explorar e faça a sua reserva hoje mesmo!</p>
+<p></p>
+
 <?php
-if ($_SESSION['role'] == 'worker' ||$_SESSION['role'] == 'admin') {
+if ($_SESSION['role'] == 'worker' || $_SESSION['role'] == 'admin') {
   echo '<a href="hotels.php"><button class="create-button">Create Hotel</button></a>';
 }
 ?>
 
+<p></p>
+<p></p>
+
 <div class="card-group">
 <?php
-// Check if there are hotels to display
+// Verifica se há hotéis para exibir
 if ($result->num_rows > 0) {
-    // Loop through the hotels and display them in cards
-    while ($row = $result->fetch_assoc()) {
-      echo '
+  // Loop através dos hotéis e exibe-os em cartões
+  while ($row = $result->fetch_assoc()) {
+    echo '
       <div class="card">
         <img class="card-img-top" src="data:image/jpeg;base64,' . $row['image'] . '" alt="Hotel Image">
         <div class="card-body">
@@ -63,23 +98,25 @@ if ($result->num_rows > 0) {
             <p class="card-text">' . $row['city'] . ', ' . $row['country'] . '</p>
             <div class="d-grid gap-2">
             <a href="rooms.php?id=' . $row['id'] . '"><button class="btn btn-success" type="button">ver quartos disponiveis</button></a>';
-            
-          // Show the delete button only to users with the admin role
-          if ($_SESSION['role'] == 'worker'|| $_SESSION['role'] == 'admin') {
-            echo '<a href="updateHotel.php?id=' . $row['id'] . '"><button class="btn btn-primary" type="button">Editar</button></a>';
-          }  
-          // Show the delete button only to users with the admin role
-          if ($_SESSION['role'] == 'admin') {
-            echo '<a href="DB/delete_hotel.php?id=' . $row['id'] . '"><button class="btn btn-danger" type="button">Apagar</button></a>';
-          }         
-      echo '</div>
+
+    // Mostra o botão de editar apenas para utilizadores com a função de worker ou admin
+    if ($_SESSION['role'] == 'worker' || $_SESSION['role'] == 'admin') {
+      echo '<a href="updateHotel.php?id=' . $row['id'] . '"><button class="btn btn-primary" type="button">Editar</button></a>';
+    }
+    // Mostra o botão de apagar apenas para utilizadores com a função de admin
+    if ($_SESSION['role'] == 'admin') {
+      echo '<a href="DB/delete_hotel.php?id=' . $row['id'] . '"><button class="btn btn-danger" type="button">Apagar</button></a>';
+    }
+    echo '</div>
         </div>
       </div>';
-    }
-  } else {
-    echo "<p>No hotels found.</p>";
   }
-  
+}
+else {
+  echo "<p>No hotels found.</p>";
+}
+
+
 
 $conn->close();
 ?>

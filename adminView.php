@@ -1,43 +1,10 @@
-<!--
-  Este arquivo PHP permite aos utilizadores autenticados criar um novo quarto para um hotel 
-  específico, com os detalhes do hotel recuperados do banco de dados. 
---> 
-
 <?php
-// Verifica se o utilizador está logado
 session_start();
 
-// Check if the user is logged in
-if (!isset($_SESSION['username'])) {
+// Verifica se o utilizador é um admin
+if (!isset($_SESSION['username']) || $_SESSION['role'] != 'admin') {
   // Redireciona o utilizador para a página de login ou outra localização apropriada
   header("Location: login.php");
-  exit();
-}
-
-require_once("DB/db_connection.php");
-
-// Verifica se o ID do hotel é fornecido na URL
-if (!isset($_GET['id'])) {
-  // Redireciona o utilizador para uma localização apropriada se o ID do hotel estiver ausente
-  header("Location: home.php");
-  exit();
-}
-
-$hotelId = $_GET['id'];
-
-// Recupera os detalhes do hotel do banco de dados
-$query = "SELECT * FROM hotels WHERE id = $hotelId";
-$result = $conn->query($query);
-
-if ($result->num_rows > 0) {
-  // Busca o registro do hotel
-  $hotel = $result->fetch_assoc();
-
-  // Busca os detalhes do hotel
-  $hotelName = $hotel['name'];
-} else {
-  // Redireciona o utilizador para uma localização apropriada se o hotel não for encontrado
-  header("Location: home.php");
   exit();
 }
 ?>
@@ -45,13 +12,18 @@ if ($result->num_rows > 0) {
 <!DOCTYPE html>
 <html>
 <head>
-<link href="css/styleAddRoom.css" rel="stylesheet" />
+  <!-- style -->
+  <link href="css/styleAllBookings.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/css/bootstrap.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.6.0/js/bootstrap.min.js"></script>
-    <title>Hotels - Create Room</title>
+  <!-- Option 1: Include in HTML -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.3.0/font/bootstrap-icons.css">
+
+  <title>Admin View</title>
 </head>
+
 <body>
 <header>
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -85,26 +57,53 @@ if ($result->num_rows > 0) {
     </nav>
   </header>
 
-    <h1>Create Room</h1>
-    <p></p>
-    <p></p>
+  <h1>All Bookings</h1>
 
-    <h2><?php echo $hotelName; ?></h2>
-    <p></p>
+  <div class="booking-container">
+    <table class="booking-table">
+      <thead>
+        <tr>
+          <th>Booking ID</th>
+          <th>User Email</th>
+          <th>Room Number</th>
+          <th>Check-in Date</th>
+          <th>Check-out Date</th>
+        </tr>
+      </thead>
+      <tbody>
+      <?php
+        // Inclui o arquivo com a conexão ao banco de dados
+        require_once "DB/db_connection.php";
 
-    <form action="DB/create_room.php" method="POST">
-      <input type="hidden" name="hotel_id" value="<?php echo $hotelId; ?>">
-      <label for="room_number">Room Number:</label>
-      <input type="text" id="room_number" name="room_number" required><br><br>
-      <label for="room_type">Room Type:</label>
-      <input type="text" id="room_type" name="room_type" required><br><br>
-      <label for="description">Description:</label>
-      <textarea id="description" name="description" required></textarea><br><br>
-      <label for="price_per_night">Price per Night:</label>
-      <input type="number" id="price_per_night" name="price_per_night" required><br><br>
-      <p></p>
-      <input type="submit" value="Create Room">
-    </form>
+        // Recupera todas as reservas do banco de dados
+        $sql = "SELECT b.id, u.email, r.room_number, b.check_in_date, b.check_out_date 
+                FROM bookings b 
+                JOIN rooms r ON b.room_id = r.id 
+                JOIN users u ON b.user_id = u.id";
+        $result = $conn->query($sql);
 
+        if ($result->num_rows > 0) {
+          while ($row = $result->fetch_assoc()) {
+            $bookingId = $row['id'];
+            $userEmail = $row['email'];
+            $roomNumber = $row['room_number'];
+            $checkInDate = $row['check_in_date'];
+            $checkOutDate = $row['check_out_date'];
+
+            echo "<tr>";
+            echo "<td>$bookingId</td>";
+            echo "<td>$userEmail</td>";
+            echo "<td>$roomNumber</td>";
+            echo "<td>$checkInDate</td>";
+            echo "<td>$checkOutDate</td>";
+            echo "</tr>";
+          }
+        } else {
+          echo "<tr><td colspan='5'>No bookings found.</td></tr>";
+        }
+        ?>
+      </tbody>
+    </table>
+  </div>
 </body>
 </html>
