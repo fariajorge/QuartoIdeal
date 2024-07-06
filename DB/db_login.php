@@ -1,18 +1,24 @@
+<!-- 
+  Este arquivo PHP processa a autenticação de usuários através de um formulário de login, verificando 
+  as credenciais no banco de dados e iniciando uma sessão se as credenciais forem válidas.
+-->
+
 <?php
+// Inclui o arquivo de conexão com o banco de dados
 require_once "db_connection.php";
 
-// Check if the form is submitted
+// Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Retrieve the form data
+  // Recupera os dados do formulário
   $username = $_POST["username"];
   $password = $_POST["password"];
 
-  // Validate the inputs (perform necessary sanitization as well)
+  // Valida as entradas (realiza a sanitização necessária também)
   if (empty($username) || empty($password)) {
-    // Display an error message if any field is empty
+    // Exibe uma mensagem de erro se algum campo estiver vazio
     $error = "Please enter both username and password.";
   } else {
-    // Query the database to check if the provided credentials match
+    // Consulta o banco de dados para verificar se as credenciais fornecidas correspondem a um utilizador
     $query = "SELECT * FROM users WHERE username = ? LIMIT 1";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $username);
@@ -22,25 +28,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows == 1) {
       $row = $result->fetch_assoc();
 
-      // Verify the password
+      // Verifica a senha
       if (password_verify($password, $row["password"])) {
-        // Start a session and store user information in session variables
+        // Inicia uma sessão e armazena as informações do utilizador em variáveis de sessão
         session_start();
         $_SESSION["user_id"] = $row["id"];
         $_SESSION["username"] = $row["username"];
-        $_SESSION["role"] = $row["role"]; // Assuming 'role' is a column in the 'users' table
+        $_SESSION["role"] = $row["role"]; // Supondo que 'role' seja uma coluna na tabela 'users'
         var_dump("akshdaksf");
-        // Redirect the user to the desired page after successful login
+
+        // Redireciona o utilizador para a página desejada após o login bem-sucedido
         header("Location: ../home.php");
         exit();
       } else {
-        // Display an error message if the password is incorrect
-        $error = "Invalid password.";
-        var_dump($error);
+        // Exibe uma mensagem de erro se a senha estiver incorreta
+        $error = "Password inválida.";
+        var_dump($error); // (é usada para exibir informações detalhadas sobre uma variável ou expressão em PHP)
       }
     } else {
-      // Display an error message if the username is not found
-      $error = "Invalid username.";
+      // Exibe uma mensagem de erro se o nome de usuário não for encontrado
+      $error = "Nome do utilizador inválido.";
       var_dump($error);
     }
   }

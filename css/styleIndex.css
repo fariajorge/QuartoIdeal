@@ -8,6 +8,7 @@ body {
   display: flex;
   flex-direction: column;
 }
+
 body p {
   font-size: 18px;
 }

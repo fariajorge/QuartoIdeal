@@ -1,3 +1,7 @@
+<!-- 
+  Este arquivo HTML exibe a página de registro para o sistema de reservas de quartos de hotel.
+-->
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,6 +22,8 @@
         </nav>
     </header>
 
+  <p></p>
+
   <h1>Register</h1>
 
   <form action="DB/db_register.php" method="POST">
@@ -30,19 +36,11 @@
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
 
-    <label for="userType">User Type:</label>
-<select id="userType" name="role" required>
-  <option value="admin">Admin</option>
-  <option value="client">Client</option>
-  <option value="worker">Worker</option>
-</select>
-
-
     <input type="submit" value="Register">
   </form>
 
   <footer>
-    <p>&copy; 2023 Hotel Room Reservation System. All rights reserved.</p>
+    <p>&copy; 2024 Hotel Room Reservation System. All rights reserved.</p>
   </footer>
 </body>
 </html>

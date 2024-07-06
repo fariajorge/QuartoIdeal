@@ -1,16 +1,22 @@
+<!-- 
+  Este arquivo PHP encerra a sessão do utilizador, limpando todas as variáveis de sessão e 
+  redirecionando-o para a página de login.
+-->
+
 <?php
+// Inclui o arquivo de conexão com o banco de dados
 require_once "db_connection.php";
 
-// Start the session
+// Inicia a sessão
 session_start();
 
-// Clear all session variables
+// Limpa todas as variáveis de sessão
 $_SESSION = array();
 
-// Destroy the session
+// Destrói a sessão
 session_destroy();
 
-// Redirect the user to the login page
+// Redireciona o utilizador para a página de login
 header("Location: ../index.php");
 exit();
 ?>

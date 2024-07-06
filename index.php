@@ -1,7 +1,12 @@
+<!-- 
+  Este arquivo PHP exibe a página inicial do site, listando os hotéis disponíveis com suas 
+  informações e opções para visualizar os quartos disponíveis.
+--> 
+
 <?php
 require_once("DB/db_connection.php");
 
-// Retrieve hotels from the database
+// Recupera hotéis do banco de dados
 $query = "SELECT * FROM hotels";
 $result = $conn->query($query);
 ?>
@@ -35,10 +40,11 @@ $result = $conn->query($query);
   </div>
 
   <div class="card-group">
+
 <?php
-// Check if there are hotels to display
+// Verifica se há hotéis para exibir
 if ($result->num_rows > 0) {
-    // Loop through the hotels and display them in cards
+    // Itera pelos hotéis e os exibe em cartões
     while ($row = $result->fetch_assoc()) {
       echo '
       <div class="card">
@@ -64,7 +70,7 @@ $conn->close();
   </main>
 
   <footer>
-    <p>&copy; 2023 Hotel Room Reservation System. All rights reserved.</p>
+    <p>&copy; 2024 Hotel Room Reservation System. All rights reserved.</p>
   </footer>
 </body>
 </html>

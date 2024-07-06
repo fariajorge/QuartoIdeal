@@ -1,20 +1,27 @@
+<!-- 
+  Este arquivo PHP processa o registro de novos usuários em um sistema, validando os dados do 
+  formulário, verificando a disponibilidade do nome de usuário, criptografando a senha, inserindo os 
+  dados no banco de dados e iniciando uma sessão para o usuário registrado.
+-->
+
 <?php
+// Inclui o arquivo de conexão com o banco de dados
 require_once "db_connection.php";
 
-// Check if the form is submitted
+// Verifica se o formulário foi enviado
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-  // Retrieve the form data
+  // Recupera os dados do formulário
   $username = $_POST["username"];
   $password = $_POST["password"];
   $email = $_POST["email"];
-  $role = $_POST["role"];
+  $role = 'client';
 
-  // Validate the inputs (perform necessary sanitization as well)
-  if (empty($username) || empty($password) || empty($email) || empty($role)) {
-    // Display an error message if any field is empty
-    $error = "Please enter username, password, email, and role.";
+  // Valida as entradas (realiza a sanitização necessária também)
+  if (empty($username) || empty($password) || empty($email) ) {
+    // Exibe uma mensagem de erro se algum campo estiver vazio
+    $error = "Please enter username, password, email";
   } else {
-    // Check if the username is already taken
+    // Verifica se o nome de usuário já está em uso
     $query = "SELECT * FROM users WHERE username = ? LIMIT 1";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("s", $username);
@@ -22,25 +29,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $result = $stmt->get_result();
 
     if ($result->num_rows > 0) {
-      // Display an error message if the username is already taken
+      // Exibe uma mensagem de erro se o nome de usuário já estiver em uso
       $error = "Username already exists. Please choose a different username.";
     } else {
-      // Hash the password
+      // Criptografa a senha
       $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-      // Insert the user into the database
+      // Insere o utilizador no banco de dados
       $query = "INSERT INTO users (username, password, email, role) VALUES (?, ?, ?, ?)";
       $stmt = $conn->prepare($query);
       $stmt->bind_param("ssss", $username, $hashedPassword, $email, $role);
       $stmt->execute();
 
-      // Start a session and store user information in session variables
+      // Inicia uma sessão e armazena informações do usuário em variáveis de sessão
       session_start();
-      $_SESSION["user_id"] = $stmt->insert_id;
+      $_SESSION["user_id"] = $stmt->insert_id; // Obtém o ID do usuário recém-inserido
       $_SESSION["username"] = $username;
       $_SESSION["role"] = $role;
 
-      // Redirect the user to the desired page after successful registration
+      // Redireciona o usuário para a página desejada após o registro bem-sucedido
       header("Location: ../home.php");
       exit();
     }

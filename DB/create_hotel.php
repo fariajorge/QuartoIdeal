@@ -1,37 +1,44 @@
-<!-- create_hotel.php -->
+<!-- 
+  Este arquivo PHP cria novos registros de hotéis, incluindo uma imagem, inserindo os dados do 
+  formulário no banco de dados e redirecionando o usuário para a página inicial.
+-->
+
 <?php
-// Include the file with the database connection
+// Inclui o arquivo com a conexão ao banco de dados
 require_once "db_connection.php";
 
-// Retrieve the form data
+// Recupera os dados do formulário
 $name = $_POST['name'];
 $address = $_POST['address'];
 $city = $_POST['city'];
 $country = $_POST['country'];
 
-// Retrieve the image file
+// Recupera o arquivo de imagem
 $image = $_FILES['image']['tmp_name'];
 
-// Check if an image file was uploaded
+// Verifica se um arquivo de imagem foi enviado
 if (!empty($image)) {
-    // Read the image file
+    // Lê o arquivo de imagem
     $imageData = file_get_contents($image);
 
-    // Encode the image data into Base64
+    // Codifica os dados da imagem em Base64
     $base64Image = base64_encode($imageData);
 
-    // Insert the hotel data and image into the database
+    // Insere os dados do hotel e a imagem no banco de dados
     $sql = "INSERT INTO hotels (name, address, city, country, image) VALUES ('$name', '$address', '$city', '$country', '$base64Image')";
 
+    // Executa a consulta e verifica se foi bem-sucedida
     if ($conn->query($sql) === TRUE) {
         echo "Hotel created successfully.";
     } else {
         echo "Error creating hotel: " . $conn->error;
     }
 } else {
+    // Mensagem de erro caso nenhum arquivo de imagem tenha sido enviado
     echo "No image file uploaded.";
 }
 
+// Redireciona para a página inicial
 header("Location: ../home.php");
 exit();
 ?>
