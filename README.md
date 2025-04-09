@@ -1,4 +1,4 @@
-# 📏 QuartoIdeal – University Room Booking System (PHP + MySQL)
+# QuartoIdeal – University Room Booking System (PHP + MySQL)
 
 ## 📌 Overview
 
