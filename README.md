@@ -56,6 +56,5 @@ This project was developed using **XAMPP** for local development and is intended
 ## 👨‍💻 Author
 
 **Jorge Faria**  
-📧 j.rafael.faria543@gmail.com  
 🔗 [LinkedIn](https://www.linkedin.com/in/fariajorge)
 
