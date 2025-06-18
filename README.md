@@ -1,57 +1,35 @@
-# QuartoIdeal – University Room Booking System (PHP + MySQL)
+# QuartoIdeal 🛏️  
+A simple room reservation system built for a university web development project, later improved with additional features and cleanup.
 
-## 📌 Overview
+## 📚 About  
+QuartoIdeal is a web-based application that allows users to browse and reserve rooms, while admins can manage availability, room details, and bookings. Originally developed for an academic assignment, it was expanded post-deadline to refine usability, aesthetics, and code quality.
 
-QuartoIdeal is a web-based platform designed to help university students find and book rooms from a selection of available hotels. Built using **PHP**, **CSS**, and **MySQL** (via **phpMyAdmin**), the system includes full user registration, booking management, and an admin interface to manage hotels, rooms, and user roles.
+## 🚀 Features  
+- Room listing with images and details  
+- Reservation form and booking logic  
+- Admin panel for room management  
+- Basic user authentication (login/logout)  
+- Responsive layout with HTML/CSS  
+- PHP backend with MySQL database
 
-This project was developed using **XAMPP** for local development and is intended as a working prototype for a basic hotel/room management system tailored for academic housing or university-related travel.
+## 🛠️ Tech Stack  
+- Frontend: HTML5, CSS3, basic JavaScript  
+- Backend: PHP  
+- Database: MySQL  
+- Version Control: Git
 
-## 🧠 Key Features
+## 🧪 Setup Instructions  
+1. Clone the repository  
+2. Set up a local server (XAMPP/LAMP recommended)  
+3. Import the included `quartoideal.sql` into your MySQL server  
+4. Configure database connection in `config.php`  
+5. Run the project via `localhost/QuartoIdeal/`
 
-- 🔐 **User Authentication**
-  - Register / Login / Logout
-  - Session-based access control
-- 🏨 **Hotel Management**
-  - Add / Edit / Delete hotels
-- 🛏️ **Room Management**
-  - Add / Edit / Delete rooms
-  - Room assignment and availability
-- 🗓️ **Booking System**
-  - Book / Cancel / Modify reservations
-- 👮 **Admin Panel**
-  - View all users
-  - Update user roles
-  - Manage bookings across hotels
+## 👨‍🎓 Origin  
+Developed as a final project for a university web development course. Extended and cleaned up afterwards to demonstrate full-stack fundamentals.
 
-## 🗂️ Folder Structure
-
-```
-/QuartoIdeal/
-├── DB/                          ← All database interaction scripts (CRUD, auth)
-├── css/                         ← Styling (vanilla CSS)
-├── image/                       ← Static assets
-├── hotels.sql                   ← SQL schema for DB setup
-├── *.php                        ← Main pages (home, login, bookings, admin, etc.)
-├── README.md                    ← This glorious file
-```
-
-## 🛠️ Tech Stack
-
-| Technology   | Role                        |
-|--------------|-----------------------------|
-| PHP          | Backend logic & rendering   |
-| MySQL        | Data storage (via phpMyAdmin) |
-| HTML/CSS     | Page structure and styling  |
-| XAMPP        | Local development stack     |
-
-
-## 🎯 Future Improvements
-
-- Add search & filter options for room type, price, and availability
-- Implement input validation and security hardening (SQL injection prevention)
-- Improve mobile responsiveness with modern CSS
-- Add real-time booking confirmation via AJAX
-- Build a front-facing design with a modern JS frontend (React or Vue?)
+## 📩 Feedback  
+Feel free to fork, play around, or send suggestions via Issues or Pull Requests.
 
 ## 👨‍💻 Author
 
